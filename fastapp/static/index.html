@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Photo Restore</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/FastHtml/fasthtml@main/dist/fast.min.css">
+    <style>
+      body { padding: 20px; max-width: 900px; margin: auto }
+      .uploader { margin-bottom: 12px }
+      .preview { display:flex; gap:12px; align-items:center }
+      .slider-wrap { position: relative; width: 500px; max-width:100% }
+      .slider-img { width:100%; height:auto; display:block }
+      .slider-input { position:absolute; left:0; right:0; top:0 }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Old Photo Restoration</h1>
+      <p>Upload an old photo and click Restore.</p>
+
+      <div class="uploader">
+        <input id="file" type="file" accept="image/*" />
+        <button id="restoreBtn" class="btn">Restore</button>
+      </div>
+
+      <div id="status"></div>
+
+      <div id="result" style="display:none; margin-top:16px">
+        <h3>Compare</h3>
+        <div class="preview">
+          <div class="slider-wrap">
+            <img id="beforeImg" class="slider-img" src="" />
+            <img id="afterImg" class="slider-img" src="" style="position:absolute; top:0; left:0; clip-path: inset(0 50% 0 0);" />
+            <input id="cmp" class="slider-input" type="range" min="0" max="100" value="50" />
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <script>
+      const fileEl = document.getElementById('file')
+      const btn = document.getElementById('restoreBtn')
+      const status = document.getElementById('status')
+      const result = document.getElementById('result')
+      const beforeImg = document.getElementById('beforeImg')
+      const afterImg = document.getElementById('afterImg')
+      const cmp = document.getElementById('cmp')
+
+      cmp.addEventListener('input', (e) => {
+        const v = e.target.value
+        afterImg.style.clipPath = `inset(0 ${100 - v}% 0 0)`
+      })
+
+      btn.addEventListener('click', async () => {
+        if (!fileEl.files.length) { alert('choose a file'); return }
+        const f = fileEl.files[0]
+        const fd = new FormData()
+        fd.append('file', f)
+        status.innerText = 'Uploading and requesting restore...'
+        btn.disabled = true
+
+        try {
+          const res = await fetch('/restore', { method: 'POST', body: fd })
+          const j = await res.json()
+          if (j.after) {
+            beforeImg.src = j.before
+            afterImg.src = j.after
+            result.style.display = 'block'
+            status.innerText = 'Done'
+          } else {
+            status.innerText = 'No restored image returned.'
+          }
+        } catch (err) {
+          console.error(err)
+          status.innerText = 'Error: ' + err.message
+        } finally {
+          btn.disabled = false
+        }
+      })
+    </script>
+  </body>
+</html>

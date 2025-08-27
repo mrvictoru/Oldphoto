@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  fastapp:
+    build: ./fastapp
+    ports:
+      - "8964:8964"
+    environment:
+      - COMFYUI_HOST=host.docker.internal:8288
+      - APP_HOST=host.docker.internal:8964
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
