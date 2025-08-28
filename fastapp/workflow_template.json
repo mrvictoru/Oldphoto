@@ -12,6 +12,19 @@
       "title": "CLIP Text Encode (Prompt)"
     }
   },
+  "11": {
+    "inputs": {
+      "guidance": 2.5,
+      "conditioning": [
+        "194",
+        0
+      ]
+    },
+    "class_type": "FluxGuidance",
+    "_meta": {
+      "title": "FluxGuidance"
+    }
+  },
   "27": {
     "inputs": {
       "vae_name": "ae.safetensors"
@@ -265,7 +278,8 @@
   "196": {
     "inputs": {
       "image": [
-        "__UPLOAD_FILENAME__"
+        "203",
+        0
       ]
     },
     "class_type": "FluxKontextImageScale",
@@ -287,7 +301,7 @@
   },
   "203": {
     "inputs": {
-      "image": "__UPLOAD_FILENAME__"
+      "image": "Screenshot 2025-08-26 175146.png"
     },
     "class_type": "LoadImage",
     "_meta": {

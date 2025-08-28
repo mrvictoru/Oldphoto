@@ -3,10 +3,11 @@ import uuid
 import json
 import shutil
 import time
+import threading
 import requests
 from pathlib import Path
-from fastapi import FastAPI, File, UploadFile, Form
-from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 import websocket
@@ -14,6 +15,26 @@ import websocket
 ROOT = Path(__file__).parent
 UPLOAD_DIR = ROOT / 'uploads'
 UPLOAD_DIR.mkdir(exist_ok=True)
+
+# Simple job history persistence (basic JSON file). Not for heavy production use.
+HISTORY_FILE = UPLOAD_DIR / 'history.json'
+_history_lock = threading.Lock()
+if HISTORY_FILE.exists():
+    try:
+        HISTORY = json.loads(HISTORY_FILE.read_text())
+        if not isinstance(HISTORY, list):
+            HISTORY = []
+    except Exception:
+        HISTORY = []
+else:
+    HISTORY = []
+
+def _save_history():
+    with _history_lock:
+        try:
+            HISTORY_FILE.write_text(json.dumps(HISTORY, indent=2))
+        except Exception:
+            pass
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory=ROOT / 'static'), name="static")
@@ -124,9 +145,30 @@ def restore(file: UploadFile = File(...)):
         after_urls.append(f"/uploads/{out_name}")
 
     # return first restored image and original upload for comparison
-    result = {
+    job = {
+        'job_id': uid,
+        'created': int(time.time()),
         'before': f"/uploads/{filename}",
         'after': after_urls[0] if after_urls else None,
         'all_after': after_urls
     }
-    return JSONResponse(result)
+    with _history_lock:
+        HISTORY.append(job)
+    _save_history()
+    return JSONResponse(job)
+
+
+@app.get('/history')
+def history_list():
+    # Return most recent first
+    with _history_lock:
+        return JSONResponse(list(reversed(HISTORY[-200:])))
+
+
+@app.get('/history/{job_id}')
+def history_item(job_id: str):
+    with _history_lock:
+        for j in HISTORY:
+            if j.get('job_id') == job_id:
+                return JSONResponse(j)
+    return JSONResponse({'error': 'not_found'}, status_code=404)
