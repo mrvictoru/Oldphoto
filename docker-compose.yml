@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   fastapp:
     build: ./fastapp
@@ -9,5 +8,10 @@ services:
       - APP_HOST=host.docker.internal:8964
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - shared_uploads:/app/uploads
 
+volumes:
+  shared_uploads:
+    external: true
 
