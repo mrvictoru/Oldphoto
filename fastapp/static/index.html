@@ -36,12 +36,32 @@
       .range { position:absolute; left:0; right:0; bottom:8px; padding:0 12px }
       .hidden { display:none }
       @media (max-width:880px) { .layout { grid-template-columns: 1fr; } .create-btn{ position:sticky; bottom:12px } }
+      /* Light theme overrides */
+      body.light { background:#f5f7fa; color:#1e2933 }
+      body.light .card { background:#ffffff; border:1px solid #e3e8ef }
+      body.light .uploader-drop { border-color:#cfd8e3; background:#f8fafc; }
+      body.light .uploader-drop:hover { background:#f1f5f9 }
+      body.light .muted { color:#5c6b7b }
+      body.light .history-list li { background:#ffffff; border-color:#e3e8ef }
+      body.light .history-list li:hover { background:#f1f5f9 }
+      body.light .pill { background:#e2e8f0; color:#475569 }
+      body.light .create-btn { background:linear-gradient(135deg,#6366f1,#2563eb); box-shadow:0 4px 14px -4px rgba(99,102,241,0.5) }
+      body.light .create-btn:disabled { background:linear-gradient(135deg,#cbd5e1,#94a3b8); color:#475569 }
+      body.light #themeToggle { border-color:#cbd5e1; color:#334155 }
+      body.light #themeToggle:hover { background:#f1f5f9 }
+      body.light .handle { background:#2563eb; color:#fff }
+      body.light .slider-wrap { background:#e2e8f0 }
+      body.light .create-btn:focus-visible { outline:2px solid #2563eb }
+      body.light a { color:#2563eb }
     </style>
   </head>
   <body>
     <header>
       <h2 style="margin:0">Photo Restoration</h2>
-      <div class="muted">Upload JPG/PNG/WEBP up to 5MB</div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div class="muted" id="subtitle">Upload JPG/PNG/WEBP up to 5MB</div>
+        <button id="themeToggle" class="btn small" style="background:transparent;border:1px solid rgba(255,255,255,0.25);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:0.85rem">🌙</button>
+      </div>
     </header>
 
     <div class="layout">
@@ -110,6 +130,21 @@
   const previewWrap = document.getElementById('previewWrap')
   const historyUl = document.getElementById('history')
   const refreshHistoryBtn = document.getElementById('refreshHistory')
+  const themeToggle = document.getElementById('themeToggle')
+
+      // Theme handling
+      function applyTheme(t){
+        document.body.classList.toggle('light', t==='light')
+        document.body.classList.toggle('dark', t==='dark')
+        themeToggle.textContent = t==='light' ? '🌙' : '☀️'
+        localStorage.setItem('theme', t)
+      }
+      const storedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+      applyTheme(storedTheme)
+      themeToggle.addEventListener('click', ()=>{
+        const next = document.body.classList.contains('light') ? 'dark' : 'light'
+        applyTheme(next)
+      })
 
       let selectedFile = null
 
