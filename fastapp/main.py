@@ -165,7 +165,19 @@ def fetch_history_images(prompt_id: str) -> List[bytes]:
 @app.get('/')
 def index():
     html_path = ROOT / 'static' / 'index.html'
-    return HTMLResponse(html_path.read_text())
+    html = html_path.read_text()
+    # Compute simple cache-busting query param based on mtime of assets
+    try:
+        css_path = ROOT / 'static' / 'styles.css'
+        js_path = ROOT / 'static' / 'app.js'
+        css_v = int(css_path.stat().st_mtime)
+        js_v = int(js_path.stat().st_mtime)
+        html = html.replace('/static/styles.css', f'/static/styles.css?v={css_v}')
+        html = html.replace('/static/app.js', f'/static/app.js?v={js_v}')
+    except Exception:
+        # fail open: if files missing, return raw HTML
+        pass
+    return HTMLResponse(html)
 
 
 @app.post('/restore')
