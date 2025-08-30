@@ -33,7 +33,12 @@
           <input id="fileInput" type="file" accept="image/*" class="hidden" />
 
 
-          <button id="createBtn" class="btn primary create-btn">Create</button>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;cursor:pointer">
+              <input type="checkbox" id="colorizeToggle" style="accent-color:#6366f1"> Colorize
+            </label>
+            <button id="createBtn" class="btn primary create-btn" style="flex:1">Create</button>
+          </div>
 
           <div id="status" class="muted" style="margin-top:10px;min-height:22px"></div>
 

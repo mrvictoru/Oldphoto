@@ -13,6 +13,7 @@ const previewWrap = document.getElementById('previewWrap')
 const historyUl = document.getElementById('history')
 const refreshHistoryBtn = document.getElementById('refreshHistory')
 const themeToggle = document.getElementById('themeToggle')
+const colorizeToggle = document.getElementById('colorizeToggle')
 
 // Theme handling
 function applyTheme(t){
@@ -116,7 +117,8 @@ createBtn.addEventListener('click', async () => {
   try {
     const fd = new FormData()
     fd.append('file', selectedFile)
-    const res = await fetch('/restore', { method: 'POST', body: fd })
+  fd.append('colorize', colorizeToggle && colorizeToggle.checked ? 'true' : 'false')
+  const res = await fetch('/restore', { method: 'POST', body: fd })
     if(!res.ok){ throw new Error('Server returned '+res.status) }
     const j = await res.json()
     if (j.after) {

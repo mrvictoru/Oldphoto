@@ -9,7 +9,7 @@ from pathlib import Path
 from urllib.parse import quote
 import re
 from typing import List
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 from starlette.status import HTTP_400_BAD_REQUEST
 try:
     from PIL import Image
@@ -181,7 +181,7 @@ def index():
 
 
 @app.post('/restore')
-def restore(file: UploadFile = File(...)):
+def restore(file: UploadFile = File(...), colorize: bool = Form(False)):
 
     # Save uploaded file (sanitize filename)
     uid = uuid.uuid4().hex
@@ -206,6 +206,20 @@ def restore(file: UploadFile = File(...)):
     # The shared volume should be mounted into ComfyUI at /root/ComfyUI/input
     # Use the absolute in-container path so ComfyUI can open the file directly.
     comfy_path = f"/root/ComfyUI/input/{filename}"
+    # Colorize prompt toggle handling: replace placeholder
+    color_text = ("Colorize realistically with natural skin tones, hair, textiles, foliage, sky, and materials. Avoid over-saturation. Respect original luminance and contrast. When ambiguous, choose plausible colors." if colorize else "")
+    if '6' in workflow and 'inputs' in workflow['6'] and isinstance(workflow['6']['inputs'].get('text'), str):
+        workflow['6']['inputs']['text'] = workflow['6']['inputs']['text'].replace('__COLORIZE__', color_text)
+    else:
+        # fallback: purge placeholder anywhere
+        for node in workflow.values():
+            if isinstance(node, dict):
+                inp = node.get('inputs', {})
+                if isinstance(inp, dict):
+                    for k, v in inp.items():
+                        if isinstance(v, str) and '__COLORIZE__' in v:
+                            inp[k] = v.replace('__COLORIZE__', color_text)
+
     # set node 203 image field if exists
     if '203' in workflow and 'inputs' in workflow['203']:
         workflow['203']['inputs']['image'] = comfy_path

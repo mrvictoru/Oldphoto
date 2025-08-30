@@ -1,7 +1,7 @@
 {
   "6": {
     "inputs": {
-      "text": "Restore an old photograph: repair scratches, reduce noise, remove compression artifacts, recover fine details and textures. Preserve identity, facial features, pose, composition, and lighting. Maintain realism and period-accurate appearance. No stylization.\n\nColorize realistically with natural skin tones, hair, textiles, foliage, sky, and materials. Avoid over-saturation. Respect original luminance and contrast. When ambiguous, choose plausible colors.\n\nEnhance clarity slightly while retaining authentic grain. Avoid plastic skin or over-sharpening.",
+  "text": "Restore an old photograph: repair scratches, reduce noise, remove compression artifacts, recover fine details and textures. Preserve identity, facial features, pose, composition, and lighting. Maintain realism and period-accurate appearance. No stylization.\n\n__COLORIZE__\nEnhance clarity slightly while retaining authentic grain. Avoid plastic skin or over-sharpening.",
       "clip": [
         "210",
         0
