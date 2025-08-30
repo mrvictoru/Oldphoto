@@ -1,6 +1,5 @@
 // Elements
 const fileInput = document.getElementById('fileInput')
-const dropArea = document.getElementById('dropArea')
 const headerDropArea = document.getElementById('headerDropArea')
 const createBtn = document.getElementById('createBtn')
 const status = document.getElementById('status')
@@ -31,22 +30,11 @@ themeToggle.addEventListener('click', ()=>{
 
 let selectedFile = null
 
-
-// Drop area behaviour for main uploader
-dropArea.addEventListener('dragover', (e) => { e.preventDefault(); dropArea.style.opacity = 0.9 })
-dropArea.addEventListener('dragleave', () => { dropArea.style.opacity = 1 })
-dropArea.addEventListener('drop', (e) => {
-  e.preventDefault(); dropArea.style.opacity = 1
-  const f = e.dataTransfer.files && e.dataTransfer.files[0]
-  if (f) { fileInput.files = e.dataTransfer.files; onFileSelected(f) }
-})
-
 // Header drag-and-drop area: clicking or dropping triggers file input
 if (headerDropArea) {
   // Click or keyboard (Enter/Space) opens file dialog
-  headerDropArea.addEventListener('click', (e) => {
-    // Only trigger if not a drag event
-    if (e.detail !== 0 || e.pointerType === undefined) fileInput.click();
+  headerDropArea.addEventListener('click', () => {
+    fileInput.click();
   });
   headerDropArea.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {

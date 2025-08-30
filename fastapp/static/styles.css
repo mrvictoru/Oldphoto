@@ -66,7 +66,17 @@ header { display:flex; align-items:center; justify-content:space-between; gap:12
 .overlay-img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover }
 .handle { position:absolute; top:50%; transform:translateY(-50%); left:50%; width:40px; height:40px; background:#fff; border-radius:40px; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(0,0,0,0.6) }
 .range { position:absolute; left:0; right:0; bottom:8px; padding:0 12px }
-.hidden { display:none }
+.hidden {
+	position: absolute !important;
+	width: 1px !important;
+	height: 1px !important;
+	padding: 0 !important;
+	margin: -1px !important;
+	overflow: hidden !important;
+	clip: rect(0, 0, 0, 0) !important;
+	white-space: nowrap !important;
+	border: 0 !important;
+}
 @media (max-width:880px) { .layout { grid-template-columns: 1fr; } .create-btn{ position:sticky; bottom:12px } }
 /* Light theme overrides */
 body.light { background:#f5f7fa; color:#1e2933 }
@@ -85,3 +95,82 @@ body.light .handle { background:#2563eb; color:#fff }
 body.light .slider-wrap { background:#e2e8f0 }
 body.light .create-btn:focus-visible { outline:2px solid #2563eb }
 body.light a { color:#2563eb }
+
+/* Colorize switch */
+.colorize-toggle { position:relative; display:inline-flex; align-items:center; cursor:pointer; user-select:none; }
+.colorize-toggle input { position:absolute; opacity:0; width:0; height:0; }
+.colorize-toggle .track {
+	position:relative;
+	width:118px;
+	height:38px;
+	padding:0 10px;
+	box-sizing:border-box;
+	background:linear-gradient(120deg,#444,#222);
+	border-radius:32px;
+	display:flex;
+	align-items:center;
+	justify-content:space-between;
+	font-size:0.60rem;
+	font-weight:600;
+	letter-spacing:1px;
+	color:#cbd5e1;
+	text-transform:uppercase;
+	border:1px solid #334155;
+	transition:background .4s,border-color .4s, filter .4s;
+	overflow:hidden;
+}
+.colorize-toggle .label-on, .colorize-toggle .label-off {
+	position:relative;
+	z-index:2;
+	transition:color .35s;
+	flex:1 1 0;
+	text-align:center;
+}
+.colorize-toggle .label-on { color:#94a3b8 }
+.colorize-toggle .label-off { color:#ffffff }
+.colorize-toggle .knob {
+	position:absolute;
+	top:50%;
+	left:3px;
+	width:32px;
+	height:32px;
+	background:#1e293b;
+	border-radius:50%;
+	box-shadow:0 4px 10px -2px rgba(0,0,0,.6), 0 0 0 1px #1e293b;
+	transition:transform .45s cubic-bezier(.65,.05,.36,1), background .45s, box-shadow .45s;
+	z-index:1;
+	transform:translateY(-50%) translateX(0);
+}
+.colorize-toggle input:checked + .track {
+	background:linear-gradient(90deg,#ff0066,#ff8c00,#ffd500,#4cd964,#00aaff,#7a5cff,#ff2fb0);
+	border-color:#64748b;
+	filter:saturate(1.1) brightness(1.05);
+}
+.colorize-toggle input:checked + .track .label-on { color:#ffffff }
+.colorize-toggle input:checked + .track .label-off { color:#e2e8f0 }
+.colorize-toggle input:checked + .track .knob {
+	transform:translateY(-50%) translateX(78px);
+	background:#0f172a;
+	box-shadow:0 4px 14px -3px rgba(0,0,0,.7), 0 0 0 1px #0f172a
+}
+.colorize-toggle input:focus-visible + .track { outline:2px solid #6366f1; outline-offset:2px }
+body.light .colorize-toggle .track {
+	/* Light mode (unchecked) should be monotone, no rainbow until checked */
+	background:linear-gradient(120deg,#f1f5f9,#e2e8f0,#cbd5e1);
+	border:1px solid #cbd5e1;
+	color:#475569;
+}
+body.light .colorize-toggle .knob {
+	background:#ffffff;
+	box-shadow:0 2px 6px rgba(0,0,0,.25), 0 0 0 1px #e2e8f0
+}
+body.light .colorize-toggle input:checked + .track {
+	background:linear-gradient(90deg,#ff0066,#ff8c00,#ffd500,#4cd964,#00aaff,#7a5cff,#ff2fb0);
+	border-color:#94a3b8;
+}
+body.light .colorize-toggle input:checked + .track .knob { background:#ffffff }
+/* Improve label contrast in light mode */
+body.light .colorize-toggle .label-off { color:#1e293b }
+body.light .colorize-toggle .label-on { color:#64748b }
+body.light .colorize-toggle input:checked + .track .label-on { color:#ffffff }
+body.light .colorize-toggle input:checked + .track .label-off { color:#f1f5f9 }
