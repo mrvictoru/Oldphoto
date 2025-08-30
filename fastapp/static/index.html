@@ -19,22 +19,18 @@
     <div class="layout">
       <!-- Left: controls -->
       <section class="card">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:56px;height:56px;background:#0f2433;border-radius:8px"></div>
+
+  <div class="header-uploader" id="headerDropArea" title="Drag and drop an image here (JPG/PNG/WEBP, max 5MB)" tabindex="0" role="button" aria-label="Upload image">
+          <div class="header-icon">📷</div>
           <div>
-            <div style="font-weight:600">Photo Restoration</div>
-            <div class="muted" style="font-size:0.9rem">Restore old photos in one click</div>
+            <div style="font-weight:600;font-size:1.08rem">Photo Restoration</div>
+            <div class="muted" style="font-size:0.92rem">Drag & drop or click below to upload an image</div>
           </div>
         </div>
 
-        <div style="margin-top:14px">
-          <label for="fileInput" class="uploader-drop" id="dropArea">
-            <div style="font-size:1.02rem;font-weight:600">Upload image</div>
-            <div class="muted" style="margin-top:6px">Drag or click to choose an image</div>
-            <input id="fileInput" type="file" accept="image/*" class="hidden" />
-          </label>
 
-          <div class="muted" style="margin-top:10px">Upload JPG/PNG/WEBP images up to 5MB</div>
+        <div style="margin-top:14px">
+          <input id="fileInput" type="file" accept="image/*" class="hidden" />
 
 
           <button id="createBtn" class="btn primary create-btn">Create</button>
@@ -44,7 +40,7 @@
           <div style="margin-top:18px">
             <div style="font-weight:600;margin-bottom:6px">History</div>
             <ul id="history" class="history-list"></ul>
-            <button id="refreshHistory" class="btn small" style="margin-top:4px;width:100%">Refresh History</button>
+            <button id="refreshHistory" class="btn primary create-btn" style="margin-top:4px;width:100%">Refresh History</button>
           </div>
         </div>
       </section>

@@ -1,9 +1,49 @@
+.header-uploader {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	margin-bottom: 10px;
+	padding: 12px 10px;
+	border: 1.5px dashed #2563eb;
+	border-radius: 10px;
+	background: linear-gradient(90deg, #1e293b 60%, #2563eb11 100%);
+	cursor: pointer;
+	transition: background 0.2s, border-color 0.2s;
+}
+.header-uploader:hover, .header-uploader.dragover {
+	background: linear-gradient(90deg, #2563eb22 60%, #2563eb33 100%);
+	border-color: #7c3aed;
+}
+.header-icon {
+	width: 48px;
+	height: 48px;
+	background: #2563eb;
+	color: #fff;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 2rem;
+	box-shadow: 0 2px 8px #2563eb22;
+}
+body.light .header-uploader {
+	background: linear-gradient(90deg, #f1f5fa 60%, #c7dafe22 100%);
+	border-color: #6366f1;
+}
+body.light .header-uploader:hover, body.light .header-uploader.dragover {
+	background: linear-gradient(90deg, #c7dafe44 60%, #6366f122 100%);
+	border-color: #6366f1;
+}
+body.light .header-icon {
+	background: #6366f1;
+	color: #fff;
+}
 :root { --max-width:1200px }
 body { padding: 18px; margin: 0 auto; max-width: var(--max-width); background:#0f1720; color: #e6eef8; font-family: Inter, system-ui, sans-serif }
 header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px }
 .layout { display:grid; grid-template-columns: 360px 1fr; gap:18px }
 .card { background: #0b1220; border: 1px solid rgba(255,255,255,0.04); border-radius:10px; padding:18px }
-.uploader-drop { border: 1px dashed rgba(255,255,255,0.06); border-radius:8px; padding:28px; text-align:center; cursor:pointer }
+.uploader-drop { border: 1px dashed rgba(255,255,255,0.06); border-radius:8px; padding:28px; text-align:center; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; box-sizing:border-box }
 .muted { color: #9aa8bf; font-size:0.95rem }
 .credits { display:flex; align-items:center; gap:8px; margin-top:12px }
 .create-btn { width:100%; margin-top:12px; background:linear-gradient(135deg,#2563eb,#7c3aed); color:#fff; font-weight:600; border:none; padding:14px 18px; border-radius:10px; cursor:pointer; font-size:1rem; letter-spacing:.3px; position:relative; overflow:hidden; transition:box-shadow .25s, transform .18s, background .4s }
