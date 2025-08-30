@@ -96,6 +96,9 @@ body.light .slider-wrap { background:#e2e8f0 }
 body.light .create-btn:focus-visible { outline:2px solid #2563eb }
 body.light a { color:#2563eb }
 
+/* Spinner in light mode: dark top to be visible */
+body.light .spinner { border:3px solid rgba(0,0,0,0.12); border-top-color: rgba(0,0,0,0.65) }
+
 /* Colorize switch */
 .colorize-toggle { position:relative; display:inline-flex; align-items:center; cursor:pointer; user-select:none; }
 .colorize-toggle input { position:absolute; opacity:0; width:0; height:0; }

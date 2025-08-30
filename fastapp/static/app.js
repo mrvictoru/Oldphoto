@@ -13,6 +13,7 @@ const historyUl = document.getElementById('history')
 const refreshHistoryBtn = document.getElementById('refreshHistory')
 const themeToggle = document.getElementById('themeToggle')
 const colorizeToggle = document.getElementById('colorizeToggle')
+const downloadBtn = document.getElementById('downloadBtn')
 
 // Theme handling
 function applyTheme(t){
@@ -70,6 +71,8 @@ function onFileSelected(f) {
   afterImg.style.display = 'none'
   slider.parentElement.style.display = 'none'
   handle.style.display = 'none'
+  // Disable download until we have a restored image
+  if (downloadBtn) downloadBtn.disabled = true
   status.textContent = ''
 }
 
@@ -121,6 +124,12 @@ createBtn.addEventListener('click', async () => {
       setStatus('Restoration complete','ok')
       // Add to history quickly (optimistic) then refresh
       appendHistory([j], true)
+      // enable download
+      if (downloadBtn) {
+        downloadBtn.disabled = false
+        // store current after url for download
+        downloadBtn.dataset.url = j.after
+      }
     } else {
       setStatus('No restored image returned.','warn')
     }
@@ -183,6 +192,20 @@ async function loadJob(jobId){
       slider.parentElement.style.display='block'
       handle.style.display='block'
       slider.value=50; updateClip(50)
+      if(downloadBtn){
+        downloadBtn.disabled = false
+        downloadBtn.dataset.url = j.after
+      }
+    } else {
+      // Clear any previous result to avoid showing stale image
+      afterImg.src = ''
+      afterImg.style.display='none'
+      slider.parentElement.style.display='none'
+      handle.style.display='none'
+      if(downloadBtn){
+        downloadBtn.disabled = true
+        delete downloadBtn.dataset.url
+      }
     }
     setStatus('Loaded job '+jobId,'ok')
   } catch(e){
@@ -193,3 +216,20 @@ async function loadJob(jobId){
 refreshHistoryBtn.addEventListener('click', ()=> loadHistory())
 // Initial history load
 loadHistory()
+
+// Download button behaviour
+if (downloadBtn) {
+  downloadBtn.addEventListener('click', (e) => {
+    const url = downloadBtn.dataset.url
+    if (!url) return
+    // create temporary link to trigger download
+    const a = document.createElement('a')
+    a.href = url
+    // suggest filename
+    const parts = url.split('/')
+    a.download = parts[parts.length - 1] || 'restored.png'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+  })
+}
